@@ -1,5 +1,5 @@
 <?php
-require_once('articles/connection.php');
+require_once('connection.php');
 $isEmpty = false;
 
 $title = mysqli_real_escape_string($conn, $_POST['Title']);
@@ -18,14 +18,14 @@ if(empty($author)){
 }
 
 if($isEmpty == true){
-    header('Location: articles/createArticle.php?message=Niečo nebolo zadané');
+    header('Location: createArticle.php?message=Niečo nebolo zadané');
 }
 
 if($isEmpty == false){
     $sql = "INSERT INTO articles (Title, Text, Cover_image, Autor) 
     VALUES('$title', '$text', '$img', '$author')";
     if ($conn->query($sql) == true){       
-        header('Location: articles/createArticle.php?message=Článok bol úspešne vytvorený');
+        header('Location: createArticle.php?message=Článok bol úspešne vytvorený');
     }
     else{
         echo "Error" . $sql . "<br>" . $conn->error;

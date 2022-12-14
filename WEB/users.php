@@ -28,7 +28,7 @@ include('scripts/getUsers.php');
             <span class="col-2"> <?php echo $user["surname"] ?></span>
             <span class="col-2"> <?php echo $user["email"] ?></span>
             <div class="col-2 d-flex justify content-center">
-                <a style="margin-right: 5px" href="pages/profile.php<?php echo "?user=".$user["id"]; ?>"class="btn btn-success">Profil</a>
+                <a style="margin-right: 5px" href="profile.php<?php echo "?user=".$user["id"]; ?>"class="btn btn-success">Profil</a>
                 <a href="scripts/delete_script.php?id=<?php echo $user["id"];?>" class="btn btn-danger mr-2">Zmazať</a>
             </div>
         </li>
