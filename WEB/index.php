@@ -11,41 +11,101 @@ require_once('articles/connection.php');
     <p>
         <?php 
             if(!isset($_GET['url'])){
-                echo '<div class="CHIPS", style="width:100%; height:50px; display:flex; justify-content: space-evenly;">';
-              
-                echo '<a href=index.php?category="Sport" style="text-decoration:none; color:black;">';
-                echo '<div class="chip" style="width: 150px; border: 2px solid black; border-radius: 10px; text-align:center;">Sport</div>';
-                echo '</a>';
+                if(isset($_GET['category'])){
+                    $categ = $_GET['category'];
+                    $categ = trim($categ,'"');
+                    
+                    $colorSport="white";
+                    $colorPolitika="white";
+                    $colorModa="white";
+                    $colorEkonomika="white";
+                    $colorKultura="white";
+                    $colorZdravie="white";
+                    $colorGaming="white";
 
-                echo '<div class="chip active" style="background:orange">Sport</div>';
-            
-                echo '<a href=index.php?category="Politika" style=" color: black; text-decoration:none;">';
-                echo '<div class="chip" style="width: 150px; border: 2px solid black; border-radius: 10px; text-align:center;">Politika</div>';
-                echo '</a>';
+                    if($categ == "Sport") $colorSport="#b0b1b6";
+                    if($categ == "Politika") $colorPolitika="#b0b1b6";
+                    if($categ == "Moda") $colorModa="#b0b1b6";
+                    if($categ == "Ekonomika") $colorEkonomika="#b0b1b6";
+                    if($categ == "Kultura") $colorKultura="#b0b1b6";
+                    if($categ == "Zdravie") $colorZdravie="#b0b1b6";
+                    if($categ == "Gaming") $colorGaming="#b0b1b6";
 
-                echo '<a href=index.php?category="Moda" style=" color: black; text-decoration:none;">';
-                echo '<div class="chip" style="width: 150px; border: 2px solid black; border-radius: 10px; text-align:center;">Moda</div>';
-                echo '</a>';
+                    $colorSport = trim($colorSport,'"');
+                    $colorPolitika = trim($colorPolitika,'"');
+                    $colorModa = trim($colorModa,'"');
+                    $colorEkonomika = trim($colorEkonomika,'"');
+                    $colorKultura = trim($colorKultura,'"');
+                    $colorZdravie = trim($colorZdravie,'"');
+                    $colorGaming = trim($colorGaming,'"');
+                    
 
-                echo '<a href=index.php?category="Ekonomika" style=" color: black; text-decoration:none;">';
-                echo '<div class="chip" style="width: 150px; border: 2px solid black; border-radius: 10px; text-align:center;">Ekonomika</div>';
-                echo '</a>';
-
-                echo '<a href=index.php?category="Kultura" style=" color: black; text-decoration:none;">';
-                echo '<div class="chip" style="width: 150px; border: 2px solid black; border-radius: 10px; text-align:center;">Kultura</div>';
-                echo '</a>';
-
-                echo '<a href=index.php?category="Zdravie" style=" color: black; text-decoration:none;">';
-                echo '<div class="chip" style="width: 150px; border: 2px solid black; border-radius: 10px; text-align:center;">Zdravie</div>';
-                echo '</a>';
-
-                echo '<a href=index.php?category="Gaming" style=" color: black; text-decoration:none;">';
-                echo '<div class="chip" style="width: 150px; border: 2px solid black; border-radius: 10px; text-align:center;">Gaming</div>';
-                echo '</a>';
-
-                echo '</div>';
-                echo '<h1 style="text-align: center;">Články</h1>';
+                    echo '<div class="CHIPS", style="width:100%; height:50px; display:flex; justify-content: space-evenly;">';
                 
+                    echo '<a href=index.php?category="Sport" style="text-decoration:none; color:black;">';
+                    echo '<div class="chip" style="width: 150px; background:'.$colorSport.'; border: 2px solid black; border-radius: 10px; text-align:center;">Sport</div>';
+                    echo '</a>';
+                
+                    echo '<a href=index.php?category="Politika" style=" color: black; text-decoration:none;">';
+                    echo '<div class="chip" style="width: 150px; background:'.$colorPolitika.'; border: 2px solid black; border-radius: 10px; text-align:center;">Politika</div>';
+                    echo '</a>';
+
+                    echo '<a href=index.php?category="Moda" style=" color: black; text-decoration:none;">';
+                    echo '<div class="chip" style="width: 150px; border: 2px solid black; background:'.$colorModa.'; border-radius: 10px; text-align:center;">Moda</div>';
+                    echo '</a>';
+
+                    echo '<a href=index.php?category="Ekonomika" style=" color: black; text-decoration:none;">';
+                    echo '<div class="chip" style="width: 150px; border: 2px solid black; background:'.$colorEkonomika.'; border-radius: 10px; text-align:center;">Ekonomika</div>';
+                    echo '</a>';
+
+                    echo '<a href=index.php?category="Kultura" style=" color: black; text-decoration:none;">';
+                    echo '<div class="chip" style="width: 150px; border: 2px solid black; background:'.$colorKultura.'; border-radius: 10px; text-align:center;">Kultura</div>';
+                    echo '</a>';
+
+                    echo '<a href=index.php?category="Zdravie" style=" color: black; text-decoration:none;">';
+                    echo '<div class="chip" style="width: 150px; border: 2px solid black; background:'.$colorZdravie.'; border-radius: 10px; text-align:center;">Zdravie</div>';
+                    echo '</a>';
+
+                    echo '<a href=index.php?category="Gaming" style=" color: black; text-decoration:none;">';
+                    echo '<div class="chip" style="width: 150px; border: 2px solid black; background:'.$colorGaming.'; border-radius: 10px; text-align:center;">Gaming</div>';
+                    echo '</a>';
+
+                    echo '</div>';
+                    echo '<h1 style="text-align: center;">Články</h1>';
+                }else{
+                    echo '<div class="CHIPS", style="width:100%; height:50px; display:flex; justify-content: space-evenly;">';
+                
+                    echo '<a href=index.php?category="Sport" style="text-decoration:none; color:black;">';
+                    echo '<div class="chip" style="width: 150px; border: 2px solid black; border-radius: 10px; text-align:center;">Sport</div>';
+                    echo '</a>';
+                
+                    echo '<a href=index.php?category="Politika" style=" color: black; text-decoration:none;">';
+                    echo '<div class="chip" style="width: 150px; border: 2px solid black; border-radius: 10px; text-align:center;">Politika</div>';
+                    echo '</a>';
+
+                    echo '<a href=index.php?category="Moda" style=" color: black; text-decoration:none;">';
+                    echo '<div class="chip" style="width: 150px; border: 2px solid black; border-radius: 10px; text-align:center;">Moda</div>';
+                    echo '</a>';
+
+                    echo '<a href=index.php?category="Ekonomika" style=" color: black; text-decoration:none;">';
+                    echo '<div class="chip" style="width: 150px; border: 2px solid black; border-radius: 10px; text-align:center;">Ekonomika</div>';
+                    echo '</a>';
+
+                    echo '<a href=index.php?category="Kultura" style=" color: black; text-decoration:none;">';
+                    echo '<div class="chip" style="width: 150px; border: 2px solid black; border-radius: 10px; text-align:center;">Kultura</div>';
+                    echo '</a>';
+
+                    echo '<a href=index.php?category="Zdravie" style=" color: black; text-decoration:none;">';
+                    echo '<div class="chip" style="width: 150px; border: 2px solid black; border-radius: 10px; text-align:center;">Zdravie</div>';
+                    echo '</a>';
+
+                    echo '<a href=index.php?category="Gaming" style=" color: black; text-decoration:none;">';
+                    echo '<div class="chip" style="width: 150px; border: 2px solid black; border-radius: 10px; text-align:center;">Gaming</div>';
+                    echo '</a>';
+
+                    echo '</div>';
+                    echo '<h1 style="text-align: center;">Články</h1>';
+                }
             }
         ?>
     <?php
@@ -170,17 +230,4 @@ require_once('articles/connection.php');
         }
     ?>
 </main>
-
-<script>
-    let list = document.querySelectorAll('.chip');
-
-    list[0].className = 'chip active';
-    list[1].className = 'chip';
-    list[2].className = 'chip active';
-    list[3].className = 'chip';
-    list[4].className = 'chip';
-    list[5].className = 'chip';
-    list[6].className = 'chip';
-</script>
-
 <?php include('parts/footer.php'); ?>
