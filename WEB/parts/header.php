@@ -19,7 +19,23 @@ session_start();
                         <li class="nav-item" style="display:flex;">
                             <a class="nav-link active" aria-current="page" href="index.php">Home</a>
                             <a class="nav-link active" aria-current="page" href="articles/createArticle.php">Create Article</a>
-                            <a class="nav-link active" aria-current="page" href="users.php">Users</a>
+                            <?php
+                                if(isset($_SESSION["username"])){
+                                    $user = $_SESSION["username"];
+                                    $query = "SELECT avatar,id,administrator FROM users WHERE username='$user'";
+                                    $result = $conn->query($query);
+                                    
+                                    while ($row = $result->fetch_assoc()) {
+                                        $avatar=$row["avatar"];
+                                        $id=$row["id"];
+                                        $admin = $row["administrator"];
+                                    }
+
+                                    if ($admin == 1){
+                                        echo '<a class="nav-link active" aria-current="page" href="users.php">Admin Panel</a>';
+                                    }
+                                }
+                            ?>
                         </li>
                     </ul>
                     <?php if (!isset($_SESSION["username"])) : ?>

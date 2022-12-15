@@ -28,6 +28,17 @@
                         <option value="house.jpg">House</option>
                     </select>
 
+                <p><select id="Category" name="Category" style="width: 200px; margin-left: 860px;" class="form-select form-select-lg form-select-border-width-0" aria-label=".form-select-lg example">
+                        <option disabled selected>Vyberte kategoriu</option>
+                        <option value="Sport">Sport</option>
+                        <option value="Politika">Politika</option>
+                        <option value="Moda">Moda</option>
+                        <option value="Ekonomika">Ekonomika</option>
+                        <option value="Kultura">Kultura</option>
+                        <option value="Zdravie">Zdravie</option>
+                        <option value="Gaming">Gaming</option>
+                    </select>
+
                 <p><button type="submit" class="btn btn-outline-danger">Create</button>
 
                 <p class="text-danger"><?php echo $message ?></p>
