@@ -28,6 +28,7 @@ include('../articles/header.php');
             while ($article = $articles->fetch_assoc()) {
             ?>
                 <div class="p-0 col-md-4 col-sm-5 col-xs-6" style="text-align: center">
+                    
 
                     <img src="articles/<?php echo $article["Cover_image"] ?>" alt="<?php echo $article["Title"] ?>" style="width: 250px">
 
