@@ -9,6 +9,10 @@ require_once('articles/connection.php');
 
 <main class="container">
     <p>
+        <?php
+        if (!isset($_GET['category'])) {
+
+        ?>
     <form acction="" method="post">
         <div class="input-group">
             <input type="text" name="search" class="form-control rounded" placeholder="Search" aria-label="Search"
@@ -17,7 +21,7 @@ require_once('articles/connection.php');
         </div>
         <br>
     </form>
-    
+    <?php } ?>
     <?php
 
 
@@ -81,7 +85,7 @@ require_once('articles/connection.php');
         }
     }
     ?>
-    
+
 
     <div class="container">
         <div class="d-flex row align-items-center">
@@ -142,74 +146,84 @@ require_once('articles/connection.php');
                         $result = $conn->query($sql);
 
 
-    $articles = [];
-    $displayNumOfArticles = 9;
-    $c = 0;
-    $page = isset($_GET["page"]) ? $_GET["page"] : "";
-    $pages = intval($page);
-    $h = $displayNumOfArticles * $pages - 1;
+                        $articles = [];
+                        $displayNumOfArticles = 9;
+                        $c = 0;
+                        $page = isset($_GET["page"]) ? $_GET["page"] : "";
+                        $pages = intval($page);
+                        $h = $displayNumOfArticles * $pages - 1;
 
-    if (isset($_POST['Submit'])) {
-        $search = mysqli_real_escape_string($conn, $_POST['search']);
-        $sqls = "SELECT * FROM articles WHERE `Title` LIKE '%$search%' OR `Text` LIKE '%$search%' OR `Autor` LIKE '%$search%' OR `category` LIKE '%$search%';";
-        $results = mysqli_query($conn, $sqls);
-        $queryResult = mysqli_num_rows($results);
-                
-        if ($queryResult > 0) {
-            while ($article = mysqli_fetch_array($results)) {
+                        if (isset($_POST['Submit'])) {
+                            $search = mysqli_real_escape_string($conn, $_POST['search']);
+                            $sqls = "SELECT * FROM articles WHERE `Title` LIKE '%$search%' OR `Text` LIKE '%$search%' OR `Autor` LIKE '%$search%' OR `category` LIKE '%$search%';";
+                            $results = mysqli_query($conn, $sqls);
+                            $queryResult = mysqli_num_rows($results);
 
-                        $h += 1;
-                        if ($h + $displayNumOfArticles < $pages * $displayNumOfArticles + ($pages * $displayNumOfArticles)) {
-                            continue;
+                            if ($queryResult > 0) {
+                                while ($article = mysqli_fetch_array($results)) {
+
+                                    $h += 1;
+                                    if ($h + $displayNumOfArticles < $pages * $displayNumOfArticles + ($pages * $displayNumOfArticles)) {
+                                        continue;
+                                    }
+            ?>
+            <div class="p-0 col-md-4 col-sm-5 col-xs-6" style="text-align: center; ">
+                <a href="index.php<?php echo "?url=" . $article["url_ar"]; ?>" target="_blank"
+                    style="text-decoration:none; color:black;">
+                    <img src="articles/<?php echo $article["Cover_image"] ?> " alt=" <?php echo $article["Title"] ?>"
+                        style="width: 250px">
+                    <p><span style="font-weight: bold;">Title:</span>
+                        <?php echo $article["Title"] ?>
+                        <br><span style="font-weight: bold;">Author:</span>
+                        <?php echo $article["Autor"] ?>
+                        <p>
+                            <?php echo $article["Text"] ?>
+            </div></a>
+
+            <?php
+                                    $c += 1;
+                                    if ($c == $displayNumOfArticles)
+                                        break;
+
+                                }
+                            } else {
+                                echo "No results";
+                            }
+                        } else if (empty($_POST['Submit'])) {
+
+                            $sql = "SELECT * FROM articles";
+                            $results = mysqli_query($conn, $sql);
+                            $queryResult = mysqli_num_rows($results);
+
+                            if ($queryResult > 0) {
+                                while ($article = mysqli_fetch_array($results)) {
+
+                                    $h += 1;
+                                    if ($h + $displayNumOfArticles < $pages * $displayNumOfArticles + ($pages * $displayNumOfArticles)) {
+                                        continue;
+                                    }
+                        ?>
+            <div class="p-0 col-md-4 col-sm-5 col-xs-6" style="text-align: center; ">
+                <a href="index.php<?php echo "?url=" . $article["url_ar"]; ?>" target="_blank"
+                    style="text-decoration:none; color:black;">
+                    <img src="articles/<?php echo $article["Cover_image"] ?> " alt=" <?php echo $article["Title"] ?>"
+                        style="width: 250px">
+                    <p><span style="font-weight: bold;">Title:</span>
+                        <?php echo $article["Title"] ?>
+                        <br><span style="font-weight: bold;">Author:</span>
+                        <?php echo $article["Autor"] ?>
+                        <p>
+                            <?php echo $article["Text"] ?>
+            </div></a>
+
+            <?php
+                                    $c += 1;
+                                    if ($c == $displayNumOfArticles)
+                                        break;
+
+                                }
+                            }
                         }
-                        ?>
-                        <div class="p-0 col-md-4 col-sm-5 col-xs-6" style="text-align: center; ">
-                        <a href="index.php<?php echo "?url=" . $article["url_ar"]; ?>" target="_blank" style="text-decoration:none; color:black;">
-                        <img src="articles/<?php  echo $article["Cover_image"] ?> " alt=" <?php echo $article["Title"] ?>" style="width: 250px">
-                        <p><span style="font-weight: bold;">Title:</span> <?php echo $article["Title"] ?>
-                        <br><span style="font-weight: bold;">Author:</span> <?php echo $article["Autor"] ?>
-                        <p> <?php echo $article["Text"] ?>
-                        </div></a>
-
-                        <?php
-                        $c += 1;
-                        if ($c == $displayNumOfArticles)
-                            break;
-
-            }
-        } else {
-            echo "No results";
-        }
-    } else if(empty($_POST['Submit'])) {
-
-        $sql = "SELECT * FROM articles";
-        $results = mysqli_query($conn, $sql);
-        $queryResult = mysqli_num_rows($results);
-
-        if ($queryResult > 0) {
-            while ($article = mysqli_fetch_array($results)) {
-
-                $h += 1;
-                if ($h + $displayNumOfArticles < $pages * $displayNumOfArticles + ($pages * $displayNumOfArticles)) {
-                    continue;
-                }
-                        ?>
-                        <div class="p-0 col-md-4 col-sm-5 col-xs-6" style="text-align: center; ">
-                        <a href="index.php<?php echo "?url=" . $article["url_ar"]; ?>" target="_blank" style="text-decoration:none; color:black;">
-                        <img src="articles/<?php echo $article["Cover_image"] ?> " alt=" <?php echo $article["Title"] ?>" style="width: 250px">
-                        <p><span style="font-weight: bold;">Title:</span> <?php echo $article["Title"] ?>
-                        <br><span style="font-weight: bold;">Author:</span> <?php echo $article["Autor"] ?>
-                        <p> <?php echo $article["Text"] ?>
-                        </div></a>
-
-                        <?php
-                $c += 1;
-                if ($c == $displayNumOfArticles)
-                    break;
-
-            }
-        }
-    }
 
 
                     }
@@ -217,7 +231,7 @@ require_once('articles/connection.php');
             }
 
 
-            ?>
+                        ?>
 
         </div>
     </div>
