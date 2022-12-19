@@ -19,6 +19,7 @@ session_start();
                         <li class="nav-item" style="display:flex;">
                             <a class="nav-link active" aria-current="page" href="index.php">Home</a>
                             <a class="nav-link active" aria-current="page" href="articles/createArticle.php">Create Article</a>
+
                             <?php
                                 if(isset($_SESSION["username"])){
                                     $user = $_SESSION["username"];
