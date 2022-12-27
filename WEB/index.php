@@ -122,7 +122,9 @@ require_once('articles/connection.php');
                             foreach ($result as $row) {
                                 echo '<div class="p-0 col-md-4 col-sm-5 col-xs-6" style="text-align: center; ">';
                                 echo '<a href=index.php?url="' . $row['url_ar'] . '" target="_blank" style="text-decoration:none; color:black;">';
-                                echo '<img src="articles/' . $row["Cover_image"] . '" alt=""' . $row["Title"] . '" style="width: 250px">';
+                                if($row["Cover_image"]!=null){
+                                   echo '<img src="articles/' . $row["Cover_image"] . '" alt=""' . $row["Title"] . '" style="width: 250px">'; 
+                                }
                                 echo '<p><span style="font-weight: bold;">Title:</span>' . $row["Title"];
                                 echo '<br><span style="font-weight: bold;">Author:</span>' . $row["Autor"];
                                 echo '<p>' . $row["Text"];
@@ -170,8 +172,12 @@ require_once('articles/connection.php');
             <div class="p-0 col-md-4 col-sm-5 col-xs-6" style="text-align: center; ">
                 <a href="index.php<?php echo "?url=" . $article["url_ar"]; ?>" target="_blank"
                     style="text-decoration:none; color:black;">
+                    <?php
+                    if ($article["Cover_image"] != null) {
+                    ?>
                     <img src="articles/<?php echo $article["Cover_image"] ?> " alt=" <?php echo $article["Title"] ?>"
                         style="width: 250px">
+                        <?php }?>
                     <p><span style="font-weight: bold;">Title:</span>
                         <?php echo $article["Title"] ?>
                         <br><span style="font-weight: bold;">Author:</span>
@@ -206,8 +212,12 @@ require_once('articles/connection.php');
             <div class="p-0 col-md-4 col-sm-5 col-xs-6" style="text-align: center; ">
                 <a href="index.php<?php echo "?url=" . $article["url_ar"]; ?>" target="_blank"
                     style="text-decoration:none; color:black;">
+                    <?php
+                    if ($article["Cover_image"] != null) {
+                    ?>
                     <img src="articles/<?php echo $article["Cover_image"] ?> " alt=" <?php echo $article["Title"] ?>"
                         style="width: 250px">
+                        <?php }?>
                     <p><span style="font-weight: bold;">Title:</span>
                         <?php echo $article["Title"] ?>
                         <br><span style="font-weight: bold;">Author:</span>
@@ -305,7 +315,39 @@ require_once('articles/connection.php');
             style="background:red; margin:50px 0px 100px 0px; color: white;"> <b>Zmazať</b></a>
         <a href="index.php?edit=<?php echo $url; ?>" class="btn btn-del"
             style="background:grey; margin:50px 0px 100px 0px; color: white;"> <b>Upravit</b></a>
+        <a href="index.php?edit=<?php echo $url; echo '&comm';?>" class="btn btn-del"
+            style="background:blue; margin:50px 0px 100px 0px; color: white;"> <b>Komentovat</b></a>
+
     </div>
+    <?php
+
+        $comm_article_id=$_GET['url'];
+        $query_c = "SELECT text_comm, name_user, id_user FROM db.comm WHERE id_article='$comm_article_id'";
+        $result_c = $conn->query($query_c);
+
+        while ($row = $result_c->fetch_assoc()) {
+            $show_text = $row["text_comm"];
+            $show_name_user = $row["name_user"];
+            $get_id_user = $row["id_user"];
+
+            $query_u = "SELECT avatar FROM registration.users WHERE id='$get_id_user'";
+            $result_u = $conn->query($query_u);
+            while ($row = $result_u->fetch_assoc()) {
+                $show_avatar = $row["avatar"];
+            }
+            
+            echo '<div class="comm_holder" style="border:2px solid black; min-height:200px; padding:5px;">';
+            echo '<div class="logo-name" style="display:flex;">';
+            echo '<img src="images/'.$show_avatar.'" style= "max-width:40px;max-height:40px;">';
+            echo '<div class="name_holder" style="font-weight:bold; font-size:30px">'.$show_name_user.'</div>';
+            echo '</div>'; 
+            echo '<div class="text_holder" style="">'.$show_text.'</div>';
+            echo '</div>';
+            echo '<br>';
+        }
+                   
+        
+    ?>
     <?php
                 }
             }
@@ -313,7 +355,45 @@ require_once('articles/connection.php');
     }
     ?>
     <?php
-    if (isset($_GET['edit'])) {
+    if (isset($_GET['comm'])) {
+        echo'<h1>Uverejnit komentar</h1>';
+        ?>
+        <form  method="post">
+            <p><label for="Text"><b>Komentar</b></label>
+            <br><textarea rows="15" style="width: 700px;" type="text" name="Text"
+            id="Text"></textarea>
+        
+            <p><button name="submit" type="submit" class="btn btn-outline-danger">Upload</button>
+        </form>
+        
+        <?php 
+
+        $comm_id_article = $_GET['edit'];
+        
+        if ($_POST) {
+            $comm_name_user = $_SESSION["username"];
+            echo $comm_name_user;
+            $query = "SELECT id FROM registration.users WHERE username='$comm_name_user'";
+            $result = $conn->query($query);
+
+            while ($row = $result->fetch_assoc()) {
+                $comm_id_user = $row["id"];
+            }
+
+            $comm_text_comm = $_POST['Text'];
+
+            $sql = "INSERT INTO db.comm (id_user, name_user, text_comm, id_article)
+                VALUES('$comm_id_user', '$comm_name_user', '$comm_text_comm', '$comm_id_article')";
+                if ($conn->query($sql) == true){       
+                    header('Location: index.php?url='.$comm_id_article.'');
+                }
+                else{
+                    echo "Error" . $sql . "<br>" . $conn->error;
+                }
+        }
+    }
+   
+    if (isset($_GET['edit'])&& !isset($_GET['comm'])) {
         $edit = $_GET['edit'];
         $edit = trim($edit, '"');
         $sqlb = "SELECT * FROM articles WHERE url_ar = '$edit'";
@@ -351,26 +431,47 @@ require_once('articles/connection.php');
                 <br><textarea rows="15" style="width: 700px;" type="text" name="Text"
                     id="Text"><?php echo $text ?></textarea>
 
-            <p><select id="Img" name="Img" style="width: 200px; margin-left: 860px;"
-                    class="form-select form-select-lg form-select-border-width-0" aria-label=".form-select-lg example">
-                    <option disabled selected>Vyberte obrazok</option>
-                    <option value="bussiness_man.jpg">Bussinessman</option>
-                    <option value="stonks.jpg">Stonks</option>
-                    <option value="poznamky.jpg">Poznamky</option>
-                    <option value="house.jpg">House</option>
-                </select>
+           
+           
+            <div class="buttonwrapper" style="text-align:center; padding-left: 42%;">
+                <p><select id="Img" name="Img" style="width: 30%;"
+                        class="form-select form-select-lg form-select-border-width-0" aria-label=".form-select-lg example">
+                        <option disabled selected>
+                            <?php 
+                                if($cover_image != null){
+                                    echo $cover_image;
+                                }else{
+                                    echo "Vyberte obrazok";
+                                }
+                            ?>
+                        </option>
+                        <option value="bussiness_man.jpg">Bussinessman</option>
+                        <option value="stonks.jpg">Stonks</option>
+                        <option value="poznamky.jpg">Poznamky</option>
+                        <option value="house.jpg">House</option>
+                    </select>
 
-            <p><select id="Category" name="Category" style="width: 200px; margin-left: 860px;"
-                    class="form-select form-select-lg form-select-border-width-0" aria-label=".form-select-lg example">
-                    <option disabled selected>Vyberte kategoriu</option>
-                    <option value="Sport">Sport</option>
-                    <option value="Politika">Politika</option>
-                    <option value="Moda">Moda</option>
-                    <option value="Ekonomika">Ekonomika</option>
-                    <option value="Kultura">Kultura</option>
-                    <option value="Zdravie">Zdravie</option>
-                    <option value="Gaming">Gaming</option>
-                </select>
+                <p><select id="Category" name="Category" style="width: 30%;"
+                        class="form-select form-select-lg form-select-border-width-0" aria-label=".form-select-lg example">
+                        <option disabled selected>
+                                <?php
+                                    
+                                if($category != null){
+                                    echo $category;
+                                }else{
+                                    echo "Vyberte kategoriu";
+                                }
+                                ?>
+                        </option>
+                        <option value="Sport">Sport</option>
+                        <option value="Politika">Politika</option>
+                        <option value="Moda">Moda</option>
+                        <option value="Ekonomika">Ekonomika</option>
+                        <option value="Kultura">Kultura</option>
+                        <option value="Zdravie">Zdravie</option>
+                        <option value="Gaming">Gaming</option>
+                    </select>
+            </div>
 
             <p><button type="submit" class="btn btn-outline-danger">Edit</button>
         </div>
