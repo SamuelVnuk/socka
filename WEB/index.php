@@ -188,7 +188,7 @@ require_once('articles/connection.php');
                             }
                         } else if (empty($_POST['Submit'])) {
  
-                            $sql = "SELECT * FROM articles";
+                            $sql = "SELECT * FROM articles ORDER BY Id DESC";
                             $results = mysqli_query($conn, $sql);
                             $queryResult = mysqli_num_rows($results);
  
@@ -213,7 +213,7 @@ require_once('articles/connection.php');
                         <?php echo $article["Title"] ?>
                         <br><span style="font-weight: bold;">Author:</span>
                         <?php echo $article["Autor"] ?>
-                        <p>
+                        <p style="overflow:hidden;">
                             <?php echo $article["Text"] ?>
             </div></a>
  
@@ -535,12 +535,25 @@ require_once('articles/connection.php');
     <?php
     }
     ?>
-
+    
     <!-- API -->
-    <script>
-        let markup = `Čerpané z: https://www.coindesk.com/`;
-        document.querySelector('main').insertAdjacentHTML('beforeend', markup);
+    <?php
+        if(isset($_SESSION["username"])){
+            $user = $_SESSION["username"];
+            $query = "SELECT displayed_API FROM registration.users WHERE username='$user'";
+            $result = $conn->query($query);
 
+            while ($row = $result->fetch_assoc()) {
+                $display_API = $row["displayed_API"];
+            }    
+    ?>
+    <div class = "scriptosmgn">
+    <script>
+        <?php
+            $word = "obrazok";
+            if(strpos($display_API, $word)!=false){     
+        ?>
+        
         fetch('https://go-apod.herokuapp.com/apod')
             .then(res => {
                return res.json();
@@ -552,10 +565,11 @@ require_once('articles/connection.php');
                 document.querySelector('main').insertAdjacentHTML('beforeend', markup);
             })
             .catch(err => console.log(err));
-
-
-        markup = `Čerpané z: https://www.coindesk.com/`;
-        document.querySelector('main').insertAdjacentHTML('beforeend', markup);
+        <?php
+            }
+            $word = "coin";
+            if(strpos($display_API, $word)!=false){  
+        ?>    
 
         fetch('https://api.coindesk.com/v1/bpi/currentprice.json')
             .then(res => {
@@ -569,10 +583,11 @@ require_once('articles/connection.php');
             })
             .catch(err => console.log(err));
 
-
-
-        markup = `Čerpané z: https://sv443.net/discord`;
-        document.querySelector('main').insertAdjacentHTML('beforeend', markup);
+        <?php
+            }
+            $word = "vtip";
+            if(strpos($display_API, $word)!=false){  
+        ?>  
 
         fetch('https://v2.jokeapi.dev/joke/Any?type=single')
             .then(res => {
@@ -585,8 +600,15 @@ require_once('articles/connection.php');
                 document.querySelector('main').insertAdjacentHTML('beforeend', markup);
             })
             .catch(err => console.log(err));
+        <?php
+            } 
+        ?>  
+
     </script>
+    </div>
+    <?php } ?>
     <!-- API -->
+        
 
 </main>
 <?php include('parts/footer.php'); ?>

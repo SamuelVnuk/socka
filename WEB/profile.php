@@ -48,6 +48,51 @@ include('scripts/profile_script.php');
                             <?php endif;
                             endif; ?>
                         </div>
+
+                    <form method="post" action="">
+                        <span>Select API</span><br/>
+                        <input type="checkbox" name='api[]' value="coin"> Crypto <br/>
+                        <input type="checkbox" name='api[]' value="vtip"> Joke <br/>
+                        <input type="checkbox" name='api[]' value="obrazok"> Astronomy <br/>
+
+                        <input type="submit" value="Submit" name="submit">
+                    </form>
+
+                    <?php
+                    $username_API = $_SESSION["username"];
+                    if(isset($_POST['submit'])){
+
+                        if(!empty($_POST['api'])) {
+                            $new_api = ""; 
+                            foreach($_POST['api'] as $value){
+                                $new_api = $new_api." ".$value;
+                            }
+
+                            $sql = "UPDATE registration.users SET displayed_api='$new_api' WHERE username='$username_API'";
+                            if ($conn->query($sql) == true){
+                                echo "Uspesne zvolene:<br>";     
+                                foreach($_POST['api'] as $value){
+                                    if ($value == "coin") echo "Crypto<br>"; 
+                                    if ($value == "vtip") echo "Joke<br>";
+                                    if ($value == "obrazok") echo "Astronomy<br>";
+                                }
+                            }
+                            else{
+                                echo "Error" . $sql . "<br>" . $conn->error;
+                            } 
+                        } else{
+                            $new_api = ""; 
+                            $sql = "UPDATE registration.users SET displayed_api='$new_api' WHERE username='$username_API'";
+                            if ($conn->query($sql) == true){
+                                echo "Zrusene zobrazovanie API";     
+                            }
+                            else{
+                                echo "Error" . $sql . "<br>" . $conn->error;
+                            } 
+                        }
+
+                    }
+?>
                     </div>
 
                 </div>
